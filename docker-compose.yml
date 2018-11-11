@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq:latest
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=mypass
+    ports:
+      - "5673:5672"
+  db:
+    image: postgres
+  web:
+    build: .
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - rabbit
+  celery:
+    build: .
+    command: celery -A my_project worker -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - rabbit
+  celery-beat:
+    build: .
+    command: celery -A my_project beat -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - db 
+      - rabbit
