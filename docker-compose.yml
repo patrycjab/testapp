@@ -37,3 +37,11 @@ services:
     depends_on:
       - db 
       - rabbit
+  django:
+    links:
+      - wdb
+  wdb:
+    image: kozea/wdb-server 
+    ports:
+      -"1984:1984"
+
