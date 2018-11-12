@@ -25,6 +25,7 @@ SECRET_KEY = '+*#76iw9%r-o0_v%xq3uf=if87d-)(pnfn(^1nnw=g$_-(r4s)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = []
 
 
@@ -122,4 +123,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-CELERY_BROKER_URL = 'amqp://localhost'
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = '/tmp/app-messages'
+EMAIL_FROM = 'test@test.pl'
+
+
+CELERY_BROKER_URL = 'amqp://admin:mypass@rabbit'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

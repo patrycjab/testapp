@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import FormView
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 
@@ -15,6 +16,8 @@ class ViewEmailSend(FormView):
     success_url = '/'
 
     def form_valid(self, form):
-        save_email.delay(form)
-            import ipdb;ipdb.set_trace()
+        obj = form.save(commit=False)
+        obj.save()
+
+        save_email.delay(obj.pk)
         return HttpResponseRedirect(self.get_success_url())
