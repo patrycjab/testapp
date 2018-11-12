@@ -18,6 +18,5 @@ class ViewEmailSend(FormView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.save()
-
         save_email.delay(obj.pk)
         return HttpResponseRedirect(self.get_success_url())

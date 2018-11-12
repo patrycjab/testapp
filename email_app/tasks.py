@@ -12,11 +12,12 @@ from .models import Email, Statistic
 
 @task(bind=True)
 def save_email(self, email_pk):
+    import ipdb;ipdb.set_trace()
     statistic = Statistic.objects.get_or_create(pk=1)[0]
     try:
         obj = Email.objects.get(id=email_pk)
     except ObjectDoesNotExist:
-        return ("%s " %  args)
+        return
     email_from = getattr(settings, 'EMAIL_FROM', 'test@task.pl')
     try:
         send = _send_email(
