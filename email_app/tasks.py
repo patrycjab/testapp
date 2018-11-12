@@ -1,38 +1,38 @@
 from datetime import timedelta
 
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail as _send_email
 
-from celery import shared_task
+from celery import task
 from celery.decorators import periodic_task
 
 from .models import Email, Statistic
 
 
-@shared_task(max_retries=2)
-def save_email(email_pk):
+@task(bind=True)
+def save_email(self, email_pk):
     statistic = Statistic.objects.get_or_create(pk=1)[0]
     try:
         obj = Email.objects.get(id=email_pk)
     except ObjectDoesNotExist:
-        pass
-    if obj:
-        email_from = getattr(settings, 'EMAIL_FROM', 'test@task.pl')
-        try:
-            send = _send_email(
-                obj.title,
-                obj.message,
-                email_from,
-                [obj.recipient],
-                )
-        except Exception:
-            obj.sended = False
-        else:
-            obj.sended = True
-        obj.save()
-        statistic.errors = Email.objects.filter(sended=False).count()
+        return ("%s " %  args)
+    email_from = getattr(settings, 'EMAIL_FROM', 'test@task.pl')
+    try:
+        send = _send_email(
+            obj.title,
+            obj.message,
+            email_from,
+            [obj.recipient],
+            )
+    except Exception:
+        self.retry()
+    else:
+        obj.sended = True
         statistic.success = Email.objects.filter(sended=True).count()
-        statistic.save()
+    obj.save()
+    statistic.errors = Email.objects.filter(sended=False).count()
+    statistic.save()
 
 @periodic_task(run_every=timedelta(minutes=15))
 def clear_task():
