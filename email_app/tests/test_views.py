@@ -6,13 +6,25 @@ from .factories import EmailFactory
 class ViewEmailSendTest(TestCase):
 
     def test_should_return_status_code_200(self):
-        result = self.client.get('/')
+        # Arrange
+        url = '/'
+
+        # Act
+        result = self.client.get(url)
+
+        # Assert
         self.assertEqual(result.status_code, 200)
 
     def test_should_return_status_code_302(self):
+        # Arrange
+        url = '/'
         data = {'title': 'test',
                 'message': 'test_message',
                 'recipient': 'test@test.pl'}
-        result = self.client.post('/', data)
-        self.assertEqual(result.status_code, 302)
 
+        # Act
+        result = self.client.post(url, data)
+
+        # Assert
+        self.assertEqual(result.status_code, 302)
+        self.assertEqual(result.url, url)

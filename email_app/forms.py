@@ -9,4 +9,3 @@ class EmailForm(forms.ModelForm):
     class Meta:
         model = Email
         fields = ['title', 'message', 'recipient']
-

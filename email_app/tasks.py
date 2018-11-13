@@ -9,11 +9,12 @@ from celery.decorators import periodic_task
 
 from .models import Email, Statistic
 
+CLEAR_TASK_SENDED = 100
+
 
 @task(bind=True)
 def save_email(self, email_pk):
-    import ipdb;ipdb.set_trace()
-    statistic = Statistic.objects.get_or_create(pk=1)[0]
+    statistic = Statistic.objects.get(pk=1)
     try:
         obj = Email.objects.get(id=email_pk)
     except ObjectDoesNotExist:
@@ -35,9 +36,9 @@ def save_email(self, email_pk):
     statistic.errors = Email.objects.filter(sended=False).count()
     statistic.save()
 
+
 @periodic_task(run_every=timedelta(minutes=15))
 def clear_task():
     statistic_succes_obj = Statistic.objects.get(pk=1).success
-    if statistic_succes_obj > 100:
+    if statistic_succes_obj > CLEAR_TASK_SENDED:
         Email.objects.filter(sended=True).delete()
-
