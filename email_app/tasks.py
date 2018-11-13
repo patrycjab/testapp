@@ -8,6 +8,7 @@ from celery import task
 from celery.decorators import periodic_task
 
 from .models import Email, Statistic
+from smtplib import SMTPException
 
 CLEAR_TASK_SENDED = 100
 
@@ -27,8 +28,8 @@ def save_email(self, email_pk):
             email_from,
             [obj.recipient],
             )
-    except Exception:
-        self.retry()
+    except SMTPException as e:
+        raise self.retry(exc=e)
     else:
         obj.sended = True
         statistic.success = Email.objects.filter(sended=True).count()

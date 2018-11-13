@@ -1,30 +1,47 @@
+import mock
 from django.test import TestCase
-from email_app.tasks import clear_task, save_email
+from django.core.exceptions import ObjectDoesNotExist
+from email_app.tasks import clear_task, save_email, _send_email
 from .factories import EmailFactory, StatisticFactory
+from smtplib import SMTPException
 
 
 class SendEmailTest(TestCase):
 
-    def test_save_email_success(self):
+    @mock.patch("email_app.tasks._send_email")
+    def test_should_return_smtpexception(self, send_email):
         # Arrange
-        email_pk = 1
-        import ipdb;ipdb.set_trace()
-        statistic = StatisticFactory()
-        email_obj = EmailFactory()
+        obj_pk = 1
+        statistic = StatisticFactory(pk=obj_pk)
+        email_obj = EmailFactory(pk=obj_pk)
+        send_email.side_effect = SMTPException
+
+        # Act Assert
+        with self.assertRaises(SMTPException):
+            result = save_email(email_obj.pk)
+
+
+
+    def test_should_return_object_doesnot_exist(self):
+        # Arrange
+        obj_pk = 1
+        statistic = StatisticFactory(pk=obj_pk)
 
         # Act
-        result = save_email(email_obj.pk)
+        result = save_email(obj_pk)
 
         # Assert
-        self.assertEqual(result, 'ok')
+        self.assertEqual(result, None)
 
-    def test_save_email_error(self):
+
+class ClearTaskTest(TestCase):
+
+    def test_should_remove_tasks(self):
         # Arrange
-        email_pk = 1
-        statistic = StatisticFactory.build(pk=1)
+        statistics = StatisticFactory(success=120, pk=1)
 
         # Act
-        result = save_email(email_pk)
+        result = clear_task()
 
         # Assert
         self.assertEqual(result, None)
