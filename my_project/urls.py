@@ -4,5 +4,5 @@ from email_app.views import ViewEmailSend
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', ViewEmailSend.as_view()),
+    url(r'^$', ViewEmailSend.as_view(), name='my-site'),
 ]
