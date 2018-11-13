@@ -1,12 +1,8 @@
-from django.shortcuts import render
-from django.views.generic import FormView
 from django.http import HttpResponseRedirect
-
-# Create your views here.
-
-from .tasks import save_email
+from django.views.generic import FormView
 
 from .forms import EmailForm
+from .tasks import save_email
 
 
 class ViewEmailSend(FormView):

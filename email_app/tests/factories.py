@@ -16,6 +16,7 @@ class EmailFactory(factory.django.DjangoModelFactory):
 class StatisticFactory(factory.django.DjangoModelFactory):
     success = 0
     errors = 0
+    pk = 1
 
     class Meta:
         model = Statistic

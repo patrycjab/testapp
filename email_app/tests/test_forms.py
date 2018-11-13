@@ -1,6 +1,6 @@
-from email_app.forms import EmailForm
-
 from django.test import TestCase
+
+from email_app.forms import EmailForm
 
 
 class EmailFormTest(TestCase):

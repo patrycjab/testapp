@@ -1,10 +1,8 @@
 from django.db import models
 
-# Create your models here.
-
 
 class Email(models.Model):
-    title = models.CharField(max_length=500, verbose_name=u'Tytuł')
+    title = models.CharField(max_length=255, verbose_name=u'Tytuł')
     message = models.TextField(verbose_name=u'Treść wiadomości')
     recipient = models.CharField(max_length=500, verbose_name=u'Adresat')
     sended = models.BooleanField(verbose_name=u'Wysłane', default=False)

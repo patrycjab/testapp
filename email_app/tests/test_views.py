@@ -1,6 +1,4 @@
-from django.test import Client, TestCase
-
-from .factories import EmailFactory
+from django.test import TestCase
 
 
 class ViewEmailSendTest(TestCase):
