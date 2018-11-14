@@ -14,6 +14,4 @@ docker-compose up
 w oddzielnej konsoli: 
 docker-compose exec web bash
 
-następnie wykonujemy migracje:
-
-python manage.py migrate email_app
+Wykonujemy migracje.
