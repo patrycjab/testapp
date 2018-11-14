@@ -3,6 +3,12 @@
 from django.db import migrations, models
 
 
+def create_statistic(apps, schema_editor):
+    Statistic = apps.get_model("email_app", "Statistic")
+    Statistic.objects.bulk_create([
+        Statistic(success=0, errors=0)])
+
+
 class Migration(migrations.Migration):
 
     initial = True
@@ -29,4 +35,5 @@ class Migration(migrations.Migration):
                 ('errors', models.PositiveIntegerField(default=0)),
             ],
         ),
+        migrations.RunPython(create_statistic),
     ]
