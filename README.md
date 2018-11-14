@@ -4,6 +4,8 @@ Do uruchomienia projektu potrzebne będzie docker-compose
 po zainstalowaniu docker, pobieramy projekt:
 git clone https://github.com/patrycjab/testapp
 
+cd testapp
+
 wykonujemy polecenie:
 docker-compose build
 
