@@ -1,0 +1,17 @@
+# testapp
+Do uruchomienia projektu potrzebne będzie docker-compose
+
+po zainstalowaniu docker, pobieramy projekt:
+git clone https://github.com/patrycjab/testapp
+
+wykonujemy polecenie:
+docker-compose build
+
+docker-compose up
+
+w oddzielnej konsoli: 
+docker-compose exec web bash
+
+następnie wykonujemy migracje:
+
+python manage.py migrate email_app
